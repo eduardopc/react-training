@@ -1,27 +1,19 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 
-import { Button } from "../Button";
+import { SubHeader } from "../SubHeader";
 
-import styles from "./Header.css"; // gera hash unico - verificar h1 abaixo
-
-export function Header({ title, children }) {
+export function Header({ buttonTitle, headingContent, children }) {
   return (
     <div style={{ marginBottom: 20 }}>
-      <h1 className={styles.title}>{title}</h1>
-      <Button
-        onClick={() => {
-          console.log("clicked");
-        }}
-      >
-        Alterar tema
-      </Button>
+      <SubHeader buttonTitle={buttonTitle} headingContent={headingContent} />
       {children}
     </div>
   );
 }
 
 Header.propTypes = {
-  title: PropTypes.string.isRequired,
+  buttonTitle: PropTypes.string.isRequired,
+  headingContent: PropTypes.string,
   children: PropTypes.node,
 };
