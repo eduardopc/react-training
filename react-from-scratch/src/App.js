@@ -1,39 +1,90 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
 
 import { Header } from "./components/Header";
 import { AddPost } from "./components/AddPost";
+import Posts from "./components/Posts";
 
-const externalArray = ["post1", "post2", "post3"];
+const initialArray = [
+  {
+    id: 1,
+    title: "Post1",
+    description: "Description Post1",
+    likes: 20,
+  },
+  {
+    id: 2,
+    title: "Post2",
+    description: "Description Post2",
+    likes: 30,
+  },
+  {
+    id: 3,
+    title: "Post3",
+    description: "Description Post3",
+    likes: 5,
+  },
+  {
+    id: 4,
+    title: "Post4",
+    description: "Description Post4",
+    likes: 40,
+  },
+];
 
 export function App() {
-  //   const [post, setPost] = useState(externalArray);
+  const [posts, setPosts] = useState(initialArray);
+  const [showPosts, setShowPosts] = useState(true);
+  const [disabledButton, setDisabledButton] = useState(false);
+
+  useEffect(() => {
+    console.log("render");
+
+    return () => console.log("unmount");
+  }, [posts]);
+
+  // useLayoutEffect(() => {
+  //   for (let index = 0; index <= 15000; index++) {
+  //     console.debug(index);
+  //     if (index === 15000) {
+  //       setShowPosts(true);
+  //       console.debug("Mount component useLayoutEffect");
+  //     }
+  //   }
+  // }, []);
 
   function handleAddPost() {
-    console.log(externalArray);
+    setDisabledButton(true);
     setTimeout(() => {
-      //   setPost((prevState) => [...prevState, `post${post.length + 1}`]);
-      externalArray.push(`post${externalArray.length + 1}`);
+      setPosts((prevState) => [
+        ...prevState,
+        {
+          id: `${prevState.length + 1}`,
+          title: `Post${prevState.length + 1}`,
+          description: `Description Post${prevState.length + 1}`,
+          likes: 20,
+        },
+      ]);
+      setDisabledButton(false);
     }, 2000);
   }
 
-  //   useEffect(() => {
-  //     console.log("rerender");
-
-  //     return () => console.log("unmount");
-  //   }, [post]);
+  function handleRemovePost(postId) {
+    setPosts((prevState) => prevState.filter((post) => post.id !== postId));
+  }
 
   return (
     <>
-      <Header title={`${externalArray.length}`}>
-        <AddPost handleAddPost={handleAddPost} />
+      <Header buttonTitle={"Alterar Tema"} headingContent={"Novo valor pro h1"}>
+        <AddPost handleAddPost={handleAddPost} disabled={disabledButton} />
       </Header>
 
-      {externalArray.map((post, index) => (
-        <Fragment key={index}>
-          <h1>{post}</h1>
-          <br />
-        </Fragment>
-      ))}
+      {showPosts &&
+        posts.map((post, index) => (
+          <React.Fragment key={index}>
+            <Posts post={post} onRemove={handleRemovePost} />
+            <br />
+          </React.Fragment>
+        ))}
     </>
   );
 }
